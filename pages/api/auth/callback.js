@@ -27,6 +27,9 @@ export default async function handler(req, res) {
     // نرجّع التوكن للواجهة
     return res.redirect(`/login?token=${access_token}`);
   } catch (err) {
-    return res.status(500).json({ error: "OAuth failed", details: err.message });
+    return res.status(500).json({
+      error: "OAuth failed",
+      details: err.message,
+    });
   }
 }
