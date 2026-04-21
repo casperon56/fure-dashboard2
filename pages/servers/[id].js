@@ -10,6 +10,7 @@ function ServerPage() {
 
   const [guild, setGuild] = useState(null);
   const [guildMembers, setGuildMembers] = useState([]);
+  const [logs, setLogs] = useState([]);
   const [tab, setTab] = useState("overview");
 
   useEffect(() => {
@@ -195,6 +196,35 @@ function ServerPage() {
                       </li>
                     );
                   })}
+                </ul>
+              )}
+            </div>
+          )}
+
+          {/* Logs */}
+          {tab === "logs" && (
+            <div>
+              <h2 className="text-2xl font-bold text-gold mb-6">Server Logs</h2>
+
+              {logs.length === 0 ? (
+                <div className="bg-[#111] border border-gray-800 p-6 rounded-xl text-gray-400 text-lg">
+                  لا توجد سجلات لعرضها حالياً.
+                  <br />
+                  <span className="text-sm text-gray-500">
+                    (سيتم إضافة نظام اللوق لاحقًا وربطه بقاعدة البيانات)
+                  </span>
+                </div>
+              ) : (
+                <ul className="space-y-4">
+                  {logs.map((log, index) => (
+                    <li
+                      key={index}
+                      className="bg-[#111] border border-gray-800 p-4 rounded-xl"
+                    >
+                      <p className="text-gold font-semibold">{log.action}</p>
+                      <p className="text-gray-400 text-sm">{log.timestamp}</p>
+                    </li>
+                  ))}
                 </ul>
               )}
             </div>
