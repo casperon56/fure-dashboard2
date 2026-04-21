@@ -28,8 +28,10 @@ function Servers() {
   return (
     <div className="h-screen bg-dark text-white flex flex-col">
       <Navbar />
+
       <div className="flex h-full">
         <Sidebar />
+
         <div className="flex-1 p-10 text-3xl">
           <h1 className="text-gold font-bold mb-6">Your Servers</h1>
 
@@ -37,11 +39,25 @@ function Servers() {
             <p className="text-xl text-gray-300">Loading servers...</p>
           ) : (
             <ul className="space-y-4 text-xl">
-              {guilds.map((g) => (
-                <li key={g.id} className="hover:text-gold">
-                  {g.name}
-                </li>
-              ))}
+              {guilds.map((g) => {
+                const icon = g.icon
+                  ? `https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png`
+                  : "https://cdn.discordapp.com/embed/avatars/1.png";
+
+                return (
+                  <li
+                    key={g.id}
+                    className="flex items-center space-x-4 hover:text-gold cursor-pointer"
+                  >
+                    <img
+                      src={icon}
+                      alt={g.name}
+                      className="w-12 h-12 rounded-full"
+                    />
+                    <span>{g.name}</span>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>
