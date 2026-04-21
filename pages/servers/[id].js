@@ -9,6 +9,7 @@ function ServerPage() {
   const { id } = router.query;
 
   const [guild, setGuild] = useState(null);
+  const [guildMembers, setGuildMembers] = useState([]);
   const [tab, setTab] = useState("overview");
 
   useEffect(() => {
@@ -27,7 +28,22 @@ function ServerPage() {
       setGuild(found);
     }
 
+    async function loadMembers() {
+      const token = localStorage.getItem("discord_token");
+      if (!token || !id) return;
+
+      const res = await fetch(`/api/auth/members?id=${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      setGuildMembers(data);
+    }
+
     loadGuild();
+    loadMembers();
   }, [id]);
 
   if (!guild) {
@@ -88,7 +104,7 @@ function ServerPage() {
             </button>
           </div>
 
-          {/* Overview Content */}
+          {/* Overview */}
           {tab === "overview" && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -127,6 +143,60 @@ function ServerPage() {
                 <p className="text-sm text-gray-400 mt-2">سيتم عرض مستوى البوست لاحقًا.</p>
               </div>
 
+            </div>
+          )}
+
+          {/* Members */}
+          {tab === "members" && (
+            <div>
+              <h2 className="text-2xl font-bold text-gold mb-6">Members</h2>
+
+              {guildMembers.length === 0 ? (
+                <p className="text-gray-400">Loading members...</p>
+              ) : (
+                <ul className="space-y-4">
+                  {guildMembers.map((m) => {
+                    const avatar = m.user.avatar
+                      ? `https://cdn.discordapp.com/avatars/${m.user.id}/${m.user.avatar}.png`
+                      : "https://cdn.discordapp.com/embed/avatars/1.png";
+
+                    return (
+                      <li
+                        key={m.user.id}
+                        className="flex items-center justify-between bg-[#111] border border-gray-800 p-4 rounded-xl"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <img src={avatar} className="w-12 h-12 rounded-full" />
+                          <div>
+                            <p className="text-lg font-semibold">{m.user.username}</p>
+                            <p className="text-gray-400 text-sm">{m.user.id}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex space-x-3">
+                          <button
+                            onClick={() => navigator.clipboard.writeText(m.user.id)}
+                            className="bg-gold text-black px-4 py-1 rounded-lg font-bold hover:bg-yellow-400"
+                          >
+                            Copy ID
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              navigator.clipboard.writeText(
+                                `الكود العسكري: ${m.user.username} | ${m.user.id}`
+                              )
+                            }
+                            className="bg-blue-600 px-4 py-1 rounded-lg font-bold hover:bg-blue-500"
+                          >
+                            Military Code
+                          </button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
             </div>
           )}
 
