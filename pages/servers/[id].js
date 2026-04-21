@@ -9,6 +9,7 @@ function ServerPage() {
   const { id } = router.query;
 
   const [guild, setGuild] = useState(null);
+  const [tab, setTab] = useState("overview");
 
   useEffect(() => {
     async function loadGuild() {
@@ -49,6 +50,8 @@ function ServerPage() {
         <Sidebar />
 
         <div className="flex-1 p-10">
+
+          {/* Header */}
           <div className="flex items-center space-x-6 mb-8">
             <img src={icon} className="w-20 h-20 rounded-full" />
             <h1 className="text-4xl font-bold text-gold">{guild.name}</h1>
@@ -56,16 +59,77 @@ function ServerPage() {
 
           {/* Tabs */}
           <div className="flex space-x-6 border-b border-gray-700 pb-3 mb-8 text-xl">
-            <button className="hover:text-gold transition">Overview</button>
-            <button className="hover:text-gold transition">Members</button>
-            <button className="hover:text-gold transition">Logs</button>
-            <button className="hover:text-gold transition">Settings</button>
+            <button
+              onClick={() => setTab("overview")}
+              className={`transition ${tab === "overview" ? "text-gold" : "hover:text-gold"}`}
+            >
+              Overview
+            </button>
+
+            <button
+              onClick={() => setTab("members")}
+              className={`transition ${tab === "members" ? "text-gold" : "hover:text-gold"}`}
+            >
+              Members
+            </button>
+
+            <button
+              onClick={() => setTab("logs")}
+              className={`transition ${tab === "logs" ? "text-gold" : "hover:text-gold"}`}
+            >
+              Logs
+            </button>
+
+            <button
+              onClick={() => setTab("settings")}
+              className={`transition ${tab === "settings" ? "text-gold" : "hover:text-gold"}`}
+            >
+              Settings
+            </button>
           </div>
 
-          {/* Content placeholder */}
-          <div className="text-gray-300 text-xl">
-            اختر تبويب من الأعلى لعرض المحتوى.
-          </div>
+          {/* Overview Content */}
+          {tab === "overview" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              {/* Server ID */}
+              <div className="bg-[#111] border border-gray-800 rounded-xl p-5">
+                <h2 className="text-xl font-semibold text-gold mb-2">Server ID</h2>
+                <div className="flex items-center justify-between">
+                  <p className="text-lg">{guild.id}</p>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(guild.id)}
+                    className="bg-gold text-black px-4 py-1 rounded-lg font-bold hover:bg-yellow-400"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+
+              {/* Members */}
+              <div className="bg-[#111] border border-gray-800 rounded-xl p-5">
+                <h2 className="text-xl font-semibold text-gold mb-2">Members</h2>
+                <p className="text-3xl font-bold">—</p>
+                <p className="text-sm text-gray-400 mt-2">سيتم جلب عدد الأعضاء لاحقًا.</p>
+              </div>
+
+              {/* Bots */}
+              <div className="bg-[#111] border border-gray-800 rounded-xl p-5">
+                <h2 className="text-xl font-semibold text-gold mb-2">Bots</h2>
+                <p className="text-3xl font-bold">—</p>
+                <p className="text-sm text-gray-400 mt-2">سيتم جلب عدد البوتات لاحقًا.</p>
+              </div>
+
+              {/* Boost Level */}
+              <div className="bg-[#111] border border-gray-800 rounded-xl p-5">
+                <h2 className="text-xl font-semibold text-gold mb-2">Boost Level</h2>
+                <p className="text-3xl font-bold">—</p>
+                <p className="text-sm text-gray-400 mt-2">سيتم عرض مستوى البوست لاحقًا.</p>
+              </div>
+
+            </div>
+          )}
+
         </div>
       </div>
     </div>
