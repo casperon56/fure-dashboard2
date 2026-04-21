@@ -1,27 +1,61 @@
-import Link from "next/link";
-
 export default function Sidebar() {
   return (
-    <div className="w-64 h-full bg-[#0f0f0f] text-white p-6">
-      <h2 className="text-2xl font-bold mb-8 text-gold">Menu</h2>
+    <div className="sidebar">
+      <h2 className="title">القوات المشتركة</h2>
 
-      <ul className="space-y-4 text-lg">
-        <li className="hover:text-gold cursor-pointer">
-          <Link href="/dashboard">Dashboard</Link>
-        </li>
+      <ul className="menu">
+        <li>الصفحة الرئيسية</li>
+        <li>نظام التقارير</li>
+        <li>شؤون التجنيد</li>
+        <li>القيادة العليا</li>
+        <li>رئاسة الوزراء</li>
 
-        <li className="hover:text-gold cursor-pointer">
-          <Link href="/servers">Servers</Link>
-        </li>
+        <h3 className="section">الوزارات</h3>
+        <li>وزارة الداخلية</li>
+        <li>وزارة الدفاع</li>
+        <li>النيابة العامة</li>
 
-        <li className="hover:text-gold cursor-pointer">
-          <Link href="/bot">Bot Settings</Link>
-        </li>
+        <h3 className="section">القوانين</h3>
+        <li>القوانين العسكرية العامة</li>
+        <li>الدورات العسكرية</li>
 
-        <li className="hover:text-gold cursor-pointer">
-          <Link href="/account">Account</Link>
-        </li>
+        <h3 className="section">وصول سريع</h3>
+        <li>الانضمام للقوات المشتركة</li>
+        <li>بوابة المستجدين</li>
+        <li>تعميمات القوات المشتركة</li>
+        <li>تواصل القوات المشتركة</li>
+        <li>الديسكورد العسكري</li>
+        <li>الديسكورد الأساسي</li>
       </ul>
+
+      <style jsx>{`
+        .sidebar {
+          width: 260px;
+          background: #0f0f0f;
+          color: white;
+          height: 100vh;
+          padding: 20px;
+          border-left: 2px solid #222;
+        }
+        .title {
+          font-size: 22px;
+          margin-bottom: 20px;
+        }
+        .menu li {
+          list-style: none;
+          padding: 10px 0;
+          cursor: pointer;
+          transition: 0.2s;
+        }
+        .menu li:hover {
+          color: #00ff9d;
+        }
+        .section {
+          margin-top: 20px;
+          font-size: 14px;
+          opacity: 0.6;
+        }
+      `}</style>
     </div>
   );
 }
