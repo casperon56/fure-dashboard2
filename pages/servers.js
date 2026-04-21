@@ -1,19 +1,16 @@
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
-import withAuth from "../../utils/withAuth";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import withAuth from "../utils/withAuth";
 
-function ServerPage() {
-  const router = useRouter();
-  const { id } = router.query;
-
-  const [guild, setGuild] = useState(null);
+function Servers() {
+  const [guilds, setGuilds] = useState([]);
 
   useEffect(() => {
-    async function loadGuild() {
+    async function loadGuilds() {
       const token = localStorage.getItem("discord_token");
-      if (!token || !id) return;
+
+      if (!token) return;
 
       const res = await fetch("/api/auth/guilds", {
         headers: {
@@ -22,24 +19,11 @@ function ServerPage() {
       });
 
       const data = await res.json();
-      const found = data.find((g) => g.id === id);
-      setGuild(found);
+      setGuilds(data);
     }
 
-    loadGuild();
-  }, [id]);
-
-  if (!guild) {
-    return (
-      <div className="h-screen bg-dark text-white flex items-center justify-center text-3xl">
-        Loading server...
-      </div>
-    );
-  }
-
-  const icon = guild.icon
-    ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
-    : "https://cdn.discordapp.com/embed/avatars/1.png";
+    loadGuilds();
+  }, []);
 
   return (
     <div className="h-screen bg-dark text-white flex flex-col">
@@ -48,19 +32,39 @@ function ServerPage() {
       <div className="flex h-full">
         <Sidebar />
 
-        <div className="flex-1 p-10">
-          <div className="flex items-center space-x-6">
-            <img src={icon} className="w-20 h-20 rounded-full" />
-            <h1 className="text-4xl font-bold text-gold">{guild.name}</h1>
-          </div>
+        <div className="flex-1 p-10 text-3xl">
+          <h1 className="text-gold font-bold mb-6">Your Servers</h1>
 
-          <p className="mt-6 text-xl text-gray-300">
-            إعدادات السيرفر ستظهر هنا قريبًا...
-          </p>
+          {guilds.length === 0 ? (
+            <p className="text-xl text-gray-300">Loading servers...</p>
+          ) : (
+            <ul className="space-y-4 text-xl">
+              {guilds.map((g) => {
+                const icon = g.icon
+                  ? `https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png`
+                  : "https://cdn.discordapp.com/embed/avatars/1.png";
+
+                return (
+                  <li
+                    key={g.id}
+                    onClick={() => (window.location.href = `/servers/${g.id}`)}
+                    className="flex items-center space-x-4 hover:text-gold cursor-pointer"
+                  >
+                    <img
+                      src={icon}
+                      alt={g.name}
+                      className="w-12 h-12 rounded-full"
+                    />
+                    <span>{g.name}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-export default withAuth(ServerPage);
+export default withAuth(Servers);
