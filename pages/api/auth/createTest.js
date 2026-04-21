@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 
 export default function CharacterTest() {
   const [code, setCode] = useState("");
-  const [valid, setValid] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [valid, setValid] = useState(true); // نخليه دائمًا صحيح
+  const [loading, setLoading] = useState(false);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 دقائق = 600 ثانية
+  const [timeLeft, setTimeLeft] = useState(600); // 10 دقائق
   const [score, setScore] = useState(null);
 
   // الأسئلة
@@ -83,25 +83,6 @@ export default function CharacterTest() {
     }
   ];
 
-  // قراءة الكود من الرابط
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const c = urlParams.get("code");
-    if (!c) {
-      setLoading(false);
-      return;
-    }
-
-    setCode(c);
-
-    fetch(`/api/auth/verifyCode?code=${c}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setValid(data.valid);
-        setLoading(false);
-      });
-  }, []);
-
   // المؤقت
   useEffect(() => {
     if (submitted) return;
@@ -124,10 +105,9 @@ export default function CharacterTest() {
   };
 
   // إرسال الاختبار
-  const submitTest = async () => {
+  const submitTest = () => {
     if (submitted) return;
 
-    // حساب النتيجة
     let correctCount = 0;
     questions.forEach((q) => {
       if (answers[q.id] === q.correct) correctCount++;
@@ -136,18 +116,10 @@ export default function CharacterTest() {
     const finalScore = correctCount * 2; // كل سؤال درجتان
     setScore(finalScore);
     setSubmitted(true);
-
-    await fetch("/api/auth/submitTest", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code, answers, score: finalScore })
-    });
   };
 
-  if (loading) return <h2>جاري التحقق من الكود...</h2>;
-
   if (!valid)
-    return <h2 style={{ color: "red" }}>❌ الكود غير صالح أو منتهي</h2>;
+    return <h2 style={{ color: "red" }}>❌ الكود غير صالح</h2>;
 
   return (
     <div style={{ padding: "30px" }}>
