@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import withAuth from "../utils/withAuth";
 
-export default function Servers() {
+function Servers() {
   const [guilds, setGuilds] = useState([]);
 
   useEffect(() => {
@@ -27,10 +28,8 @@ export default function Servers() {
   return (
     <div className="h-screen bg-dark text-white flex flex-col">
       <Navbar />
-
       <div className="flex h-full">
         <Sidebar />
-
         <div className="flex-1 p-10 text-3xl">
           <h1 className="text-gold font-bold mb-6">Your Servers</h1>
 
@@ -50,3 +49,5 @@ export default function Servers() {
     </div>
   );
 }
+
+export default withAuth(Servers);
