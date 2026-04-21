@@ -22,11 +22,10 @@ export default async function handler(req, res) {
       { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
     );
 
-    const userResponse = await axios.get("https://discord.com/api/users/@me", {
-      headers: { Authorization: `Bearer ${tokenResponse.data.access_token}` },
-    });
+    const access_token = tokenResponse.data.access_token;
 
-    return res.status(200).json(userResponse.data);
+    // نرجّع التوكن للواجهة
+    return res.redirect(`/login?token=${access_token}`);
   } catch (err) {
     return res.status(500).json({ error: "OAuth failed", details: err.message });
   }
